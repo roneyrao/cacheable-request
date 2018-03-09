@@ -1,6 +1,6 @@
 # cacheable-request-adaptable
 
-** A fork from [cacheable-request](https://github.com/lukechilds/cacheable-request) with refined interface to expose internal members. **
+**A fork from [cacheable-request](https://github.com/lukechilds/cacheable-request) with refined interface to expose internal members. such as Cache, cachePolicy**
 
 > Wrap native HTTP requests with RFC compliant cache support
 
