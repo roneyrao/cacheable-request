@@ -6,7 +6,7 @@ import createTestServer from 'create-test-server';
 import delay from 'delay';
 import sqlite3 from 'sqlite3';
 import pify from 'pify';
-import CacheableRequest from 'this';
+import CacheableRequest from '../src';
 
 let s;
 

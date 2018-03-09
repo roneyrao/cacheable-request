@@ -1,6 +1,6 @@
 import { request } from 'http';
 import test from 'ava';
-import CacheableRequest from 'this';
+import CacheableRequest from '../src';
 
 test('CacheableRequest is a function', t => {
 	t.is(typeof CacheableRequest, 'function');
