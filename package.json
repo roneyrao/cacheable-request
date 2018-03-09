@@ -4,8 +4,8 @@
   "description": "Wrap native HTTP requests with RFC compliant cache support",
   "main": "src/index.js",
   "scripts": {
-    "test": "xo && nyc ava",
-    "coverage": "nyc report --reporter=text-lcov"
+    "test": "xo && nyc ava --reporter=text --reporter=lcov",
+    "prepublish": "npm test"
   },
   "xo": {
     "extends": "xo-lukechilds"
