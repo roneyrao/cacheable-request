@@ -96,7 +96,7 @@ test.cb('cacheableRequest emits CacheError if cache adapter connection errors', 
 	const cacheableRequest = new CacheableRequest(request, { cacheAdapter: `sqlite://non/existent/database.sqlite` }).createRequest();
 	cacheableRequest(url.parse(s.url))
 		.on('error', err => {
-			t.true(err instanceof CacheableRequest.CacheError);
+			t.true(err.name === 'CacheError');
 			t.is(err.code, 'SQLITE_CANTOPEN');
 			t.end();
 		})
@@ -116,7 +116,7 @@ test.cb('cacheableRequest emits CacheError if cache.get errors', t => {
 	const cacheableRequest = new CacheableRequest(request, { cacheAdapter: cache }).createRequest();
 	cacheableRequest(url.parse(s.url))
 		.on('error', err => {
-			t.true(err instanceof CacheableRequest.CacheError);
+			t.true(err.name === 'CacheError');
 			t.is(err.message, errMessage);
 			t.end();
 		})
@@ -136,7 +136,7 @@ test.cb('cacheableRequest emits CacheError if cache.set errors', t => {
 	const cacheableRequest = new CacheableRequest(request, { cacheAdapter: cache }).createRequest();
 	cacheableRequest(url.parse(s.url))
 		.on('error', err => {
-			t.true(err instanceof CacheableRequest.CacheError);
+			t.true(err.name === 'CacheError');
 			t.is(err.message, errMessage);
 			t.end();
 		})
@@ -171,7 +171,7 @@ test.cb('cacheableRequest emits CacheError if cache.delete errors', t => {
 			setImmediate(() => {
 				cacheableRequest(s.url)
 					.on('error', async err => {
-						t.true(err instanceof CacheableRequest.CacheError);
+						t.true(err.name === 'CacheError');
 						t.is(err.message, errMessage);
 						await s.close();
 						t.end();
@@ -188,7 +188,7 @@ test.cb('cacheableRequest emits RequestError if request function throws', t => {
 	opts.headers = { invalid: '💣' };
 	cacheableRequest(opts)
 		.on('error', err => {
-			t.true(err instanceof CacheableRequest.RequestError);
+			t.true(err.name === 'RequestError');
 			t.is(err.message, 'The header content contains invalid characters');
 			t.end();
 		})
