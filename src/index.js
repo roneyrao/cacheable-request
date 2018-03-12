@@ -48,6 +48,8 @@ class CacheableRequest {
 			const ee = new EventEmitter();
 			const url = normalizeUrl(urlLib.format(opts));
 			const key = `${opts.method}:${url}`;
+			ee.emit('cacheKey', key);
+
 			let revalidate = false;
 			let madeRequest = false;
 

@@ -1,6 +1,6 @@
 {
   "name": "cacheable-request-adaptable",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Wrap native HTTP requests with RFC compliant cache support",
   "main": "dist",
   "files": ["/dist"],

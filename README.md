@@ -57,6 +57,10 @@ const cacheReq = request('http://example.com', cb);
 cacheReq.on('request', req => req.end());
 // Future requests to 'example.com' will be returned from cache if still valid
 
+cacheReq.on('cacheKey', cacheKey => {
+  // access cache key here.
+});
+
 // You pass in any other http.request API compatible method to be wrapped with cache support:
 const cacheableRequest = new CacheableRequest(https.request);
 const cacheableRequest = new CacheableRequest(electron.net);
