@@ -48,7 +48,6 @@ class CacheableRequest {
 			const ee = new EventEmitter();
 			const url = normalizeUrl(urlLib.format(opts));
 			const key = `${opts.method}:${url}`;
-			ee.emit('cacheKey', key);
 
 			let revalidate = false;
 			let madeRequest = false;
@@ -111,7 +110,10 @@ class CacheableRequest {
 			};
 
 			const get = opts => Promise.resolve()
-				.then(() => opts.cache ? this.cache.get(key) : undefined)
+				.then(() => {
+					ee.emit('cacheKey', key);
+					return opts.cache ? this.cache.get(key) : undefined;
+				})
 				.then(cacheEntry => {
 					if (typeof cacheEntry === 'undefined') {
 						return makeRequest(opts);
