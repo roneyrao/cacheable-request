@@ -1,11 +1,11 @@
 {
   "name": "cacheable-request-adaptable",
-  "version": "2.1.4",
+  "version": "3.0.1",
   "description": "Wrap native HTTP requests with RFC compliant cache support",
-  "main": "dist/",
-  "files": "dist/",
+  "main": "dist",
+  "files": ["/dist"],
   "scripts": {
-    "test": "xo && nyc ava --reporter=text --reporter=lcov",
+    "test": "xo && nyc ava --verbose --reporter=text --reporter=lcov",
     "prebuild": "npm test",
     "build": "babel src -d dist",
     "prepublish": "npm build"

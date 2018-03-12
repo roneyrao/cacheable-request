@@ -1,4 +1,3 @@
-
 'use strict';
 
 const EventEmitter = require('events');
@@ -12,15 +11,20 @@ const cloneResponse = require('clone-response');
 const Keyv = require('keyv');
 
 class CacheableRequest {
-	constructor(request, cacheAdapter, policyConstructor) {
+	constructor(request, options) {
 		if (typeof request !== 'function') {
 			throw new TypeError('Parameter `request` must be a function');
 		}
 
+		if (!options) {
+			options = {};
+		}
+		const { cacheAdapter, policyConstructor, namespace } = options;
+
 		this.cache = new Keyv({
 			uri: typeof cacheAdapter === 'string' && cacheAdapter,
 			store: typeof cacheAdapter !== 'string' && cacheAdapter,
-			namespace: 'cacheable-request'
+			namespace: namespace || 'cacheable-request'
 		});
 
 		this.CachePolicy = policyConstructor || CachePolicy;
@@ -95,6 +99,9 @@ class CacheableRequest {
 
 				try {
 					const req = (0, this.request)(opts, handler);
+					req.on('error', err => {
+						ee.emit('error', new CacheableRequest.RequestError(err));
+					});
 					ee.emit('request', req);
 				} catch (err) {
 					ee.emit('error', new CacheableRequest.RequestError(err));

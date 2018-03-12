@@ -20,10 +20,12 @@ test('cacheableRequest is a function', t => {
 	t.is(typeof newRequest, 'function');
 });
 
-test('custom CachePolicy is applied', t => {
-	const CachePolicy = {};
-	const cacheableRequest = new CacheableRequest(request, null, CachePolicy);
-	t.is(cacheableRequest.CachePolicy, CachePolicy);
+test('options', t => {
+	const options = { cacheAdapter: {}, policyConstructor: {}, namespace: 'afa' };
+	const cacheableRequest = new CacheableRequest(request, options);
+	t.is(cacheableRequest.cache.opts.store, options.cacheAdapter);
+	t.is(cacheableRequest.CachePolicy, options.policyConstructor);
+	t.is(cacheableRequest.cache.opts.namespace, options.namespace);
 });
 
 test.cb('cacheableRequest returns an event emitter', t => {
@@ -91,7 +93,7 @@ test.cb('cacheableRequest emits response event for cached responses', t => {
 });
 
 test.cb('cacheableRequest emits CacheError if cache adapter connection errors', t => {
-	const cacheableRequest = new CacheableRequest(request, `sqlite://non/existent/database.sqlite`).createRequest();
+	const cacheableRequest = new CacheableRequest(request, { cacheAdapter: `sqlite://non/existent/database.sqlite` }).createRequest();
 	cacheableRequest(url.parse(s.url))
 		.on('error', err => {
 			t.true(err instanceof CacheableRequest.CacheError);
@@ -111,7 +113,7 @@ test.cb('cacheableRequest emits CacheError if cache.get errors', t => {
 		set: store.set.bind(store),
 		delete: store.delete.bind(store)
 	};
-	const cacheableRequest = new CacheableRequest(request, cache).createRequest();
+	const cacheableRequest = new CacheableRequest(request, { cacheAdapter: cache }).createRequest();
 	cacheableRequest(url.parse(s.url))
 		.on('error', err => {
 			t.true(err instanceof CacheableRequest.CacheError);
@@ -131,7 +133,7 @@ test.cb('cacheableRequest emits CacheError if cache.set errors', t => {
 		},
 		delete: store.delete.bind(store)
 	};
-	const cacheableRequest = new CacheableRequest(request, cache).createRequest();
+	const cacheableRequest = new CacheableRequest(request, { cacheAdapter: cache }).createRequest();
 	cacheableRequest(url.parse(s.url))
 		.on('error', err => {
 			t.true(err instanceof CacheableRequest.CacheError);
@@ -151,7 +153,7 @@ test.cb('cacheableRequest emits CacheError if cache.delete errors', t => {
 			throw new Error(errMessage);
 		}
 	};
-	const cacheableRequest = new CacheableRequest(request, cache).createRequest();
+	const cacheableRequest = new CacheableRequest(request, { cacheAdapter: cache }).createRequest();
 
 	(async () => {
 		let i = 0;
@@ -194,7 +196,7 @@ test.cb('cacheableRequest emits RequestError if request function throws', t => {
 });
 
 test.cb('cacheableRequest makes request even if initial DB connection fails (when opts.automaticFailover is enabled)', t => {
-	const cacheableRequest = new CacheableRequest(request, 'sqlite://non/existent/database.sqlite').createRequest();
+	const cacheableRequest = new CacheableRequest(request, { cacheAdapter: 'sqlite://non/existent/database.sqlite' }).createRequest();
 	const opts = url.parse(s.url);
 	opts.automaticFailover = true;
 	cacheableRequest(opts, res => {
@@ -217,7 +219,7 @@ test.cb('cacheableRequest makes request even if current DB connection fails (whe
 			throw new Error();
 		}
 	};
-	const cacheableRequest = new CacheableRequest(request, cache).createRequest();
+	const cacheableRequest = new CacheableRequest(request, { cacheAdapter: cache }).createRequest();
 	const opts = url.parse(s.url);
 	opts.automaticFailover = true;
 	cacheableRequest(opts, res => {

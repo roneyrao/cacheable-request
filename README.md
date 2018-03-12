@@ -1,6 +1,6 @@
 # cacheable-request-adaptable
 
-**A fork from [cacheable-request](https://github.com/lukechilds/cacheable-request) with refined interface to expose internal members, such as Cache, cachePolicy.**
+**A fork from [cacheable-request](https://github.com/lukechilds/cacheable-request) with refined interface to expose internal members, such as Cache, cachePolicy, and allow being passed in.**
 
 > Wrap native HTTP requests with RFC compliant cache support
 
@@ -45,7 +45,12 @@ const req = http.request('http://example.com', cb);
 req.end();
 
 // You can do
-const cacheableRequest = new CacheableRequest(http.request);
+const options = {
+  cacheAdapter,       // keyv storage adpator
+  policyConstructor,  // CachePolicy constructor
+  namespace           // string, for keyv
+}
+const cacheableRequest = new CacheableRequest(http.request, options);
 // its members such as store, CachePolicy, namespace can be adjusted here.
 const request = cacheableRequest.createRequest();
 const cacheReq = request('http://example.com', cb);
@@ -70,7 +75,7 @@ npm install --save @keyv/redis
 And then you can pass `CacheableRequest` your connection string:
 
 ```js
-const cacheableRequest = new CacheableRequest(http.request, 'redis://user:pass@localhost:6379');
+const cacheableRequest = new CacheableRequest(http.request, { cacheAdapter: 'redis://user:pass@localhost:6379' });
 ```
 
 [View all official Keyv storage adapters.](https://github.com/lukechilds/keyv#official-storage-adapters)
@@ -87,7 +92,7 @@ const storageAdapter = require('./my-storage-adapter');
 const QuickLRU = require('quick-lru');
 const storageAdapter = new QuickLRU({ maxSize: 1000 });
 
-const cacheableRequest = new CacheableRequest(http.request, storageAdapter);
+const cacheableRequest = new CacheableRequest(http.request, { cacheAdapter: storageAdapter });
 ```
 
 View the [Keyv docs](https://github.com/lukechilds/keyv) for more information on how to use storage adapters.
