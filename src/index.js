@@ -20,7 +20,6 @@ class CacheableRequest {
 			options = {};
 		}
 		const { cacheAdapter, policyConstructor, namespace } = options;
-
 		this.cache = new Keyv({
 			uri: typeof cacheAdapter === 'string' && cacheAdapter,
 			store: typeof cacheAdapter !== 'string' && cacheAdapter,
